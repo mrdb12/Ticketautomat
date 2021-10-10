@@ -6,6 +6,7 @@ void runMenu();
 struct ticket *ini24HTicket();
 struct ticket *iniOneTimeTicket();
 void printTicket(struct ticket *ticket);
+struct ticket *chooseTicket();
 
 
 struct ticket{
@@ -14,29 +15,25 @@ struct ticket{
 };
 
 int main(void){
+  //Routenplaner
+  //Infos Printen
   runMenu();
+  //paying
+  //Abbruch möglichkeit
+  //Protokoll ausschreiben
+  //Mehrere Karten kaufen
 
   return 0;
 }
 
 void runMenu(){
-  char option;
   struct ticket *ticket;
+  char option;
 
   printf("Do you want to buy a ticket(1) or quit(2)\n");
   scanf("%c", &option);
   if(option == '1'){
-    printf("Which ticket do you want to buy?:\n24HTicket (1)\nOneTimeTicket (2)\n");
-    scanf("\n%c", &option);
-    if (option == '1') {
-      ticket = ini24HTicket();
-      printTicket(ticket);
-    }else if (option == '2') {
-      ticket = iniOneTimeTicket();
-      printTicket(ticket);
-    }else{
-      printf("Illegal input\n");
-    }
+    ticket = chooseTicket();
   }else if(option == '2'){
     printf("Quiting");
   }else{
@@ -61,6 +58,25 @@ struct ticket *iniOneTimeTicket(){
   ptrTicket->price = 3.3;
 
   return ptrTicket;
+}
+
+struct ticket *chooseTicket(){
+  struct ticket *ticket = NULL;
+  char option;
+
+  printf("Which ticket do you want to buy?:\n24HTicket (1)\nOneTimeTicket (2)\n");
+  scanf("\n%c", &option);
+  if (option == '1') {
+    ticket = ini24HTicket();
+    printTicket(ticket);
+  }else if (option == '2') {
+    ticket = iniOneTimeTicket();
+    printTicket(ticket);
+  }else{
+    printf("Illegal input\n");
+  }
+
+  return ticket;
 }
 
 void printTicket(struct ticket *ticket){
