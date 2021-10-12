@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+void printInfo();
 struct ticket * runMenu();
 struct ticket *ini24HTicket();
 struct ticket *iniOneTimeTicket();
@@ -21,23 +22,32 @@ int main(void){
   //Infos Printen
   ticket = runMenu();
   payTicket(ticket);
-  //Abbruch möglichkeit
-  //Protokoll ausschreiben
   //Mehrere Karten kaufen
+  //Protokoll ausschreiben
+
+  //Abbruch möglichkeit
 
   return 0;
+}
+
+void printInfo(){
+  printf("\nTickets: \n24HTicket: 8.8$");
+  printf("\nOneTimeTicket: 3.3$\n");
 }
 
 struct ticket * runMenu(){
   struct ticket *ticket = NULL;
   char option;
 
-  printf("Do you want to buy a ticket(1) or quit(2)\n");
+  printf("Do you want to buy a ticket(1), quit(2) or info(3)\n");
   scanf("%c", &option);
+
   if(option == '1'){
     ticket = chooseTicket();
   }else if(option == '2'){
     printf("Quiting");
+  }else if(option == '3'){
+    printInfo();
   }else{
     printf("Illegal input\n");
   }
