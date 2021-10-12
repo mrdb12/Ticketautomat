@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-void runMenu();
+struct ticket * runMenu();
 struct ticket *ini24HTicket();
 struct ticket *iniOneTimeTicket();
 void printTicket(struct ticket *ticket);
 struct ticket *chooseTicket();
-
+int payTicket(struct ticket *ticket);
 
 struct ticket{
   char name[15];
@@ -15,10 +15,12 @@ struct ticket{
 };
 
 int main(void){
+  struct ticket *ticket;
+
   //Routenplaner
   //Infos Printen
-  runMenu();
-  //paying
+  ticket = runMenu();
+  payTicket(ticket);
   //Abbruch möglichkeit
   //Protokoll ausschreiben
   //Mehrere Karten kaufen
@@ -26,8 +28,8 @@ int main(void){
   return 0;
 }
 
-void runMenu(){
-  struct ticket *ticket;
+struct ticket * runMenu(){
+  struct ticket *ticket = NULL;
   char option;
 
   printf("Do you want to buy a ticket(1) or quit(2)\n");
@@ -39,6 +41,8 @@ void runMenu(){
   }else{
     printf("Illegal input\n");
   }
+
+  return ticket;
 
 }
 
@@ -68,10 +72,8 @@ struct ticket *chooseTicket(){
   scanf("\n%c", &option);
   if (option == '1') {
     ticket = ini24HTicket();
-    printTicket(ticket);
   }else if (option == '2') {
     ticket = iniOneTimeTicket();
-    printTicket(ticket);
   }else{
     printf("Illegal input\n");
   }
@@ -84,4 +86,33 @@ void printTicket(struct ticket *ticket){
   printf("You bought the ticket: %s\n", ticket->name);
   printf("For %.2f $\n", ticket->price);
   printf("....................\n");
+}
+
+int payTicket(struct ticket *ticket){
+  int check = 0;
+  double price = ticket->price;
+  double cashInput = 0;
+  double cashCurrInput;
+  double change;
+
+  while(price > cashInput){
+    printf("\n");
+    printf("You still have to pay: %.2f\n", (price-cashInput));
+    printf("Or do you want to exit, if so write a negative number\n");
+    scanf("\n%lf", &cashCurrInput);
+
+    if(cashCurrInput >= 0){
+      cashInput += cashCurrInput;
+    }else{
+      break;
+    }
+  }
+  if(price < cashInput){
+    check = 1;
+    change = cashInput - price;
+    printTicket(ticket);
+    printf("\nChange: %.2f\n", change);
+  }
+
+  return check;
 }
