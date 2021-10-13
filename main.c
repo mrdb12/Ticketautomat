@@ -9,23 +9,26 @@ struct ticket *iniOneTimeTicket();
 void printTicket(struct ticket *ticket);
 struct ticket *chooseTicket();
 int payTicket(struct ticket *ticket);
+struct ticket *append(struct ticket *currEnd, struct ticket *newTicket);//returns new end
+void printLinkedList(struct ticket *start);
+
+
 
 struct ticket{
   char name[15];
   double price;
+  struct ticket *next;
 };
 
 int main(void){
-  struct ticket *ticket;
+  int bool = 1;
 
-  //Routenplaner
-  //Infos Printen
-  ticket = runMenu();
-  payTicket(ticket);
-  //Mehrere Karten kaufen
-  //Protokoll ausschreiben
+  while(bool){
+    //Routenplaner
+    runMenu();
+    //Protokoll ausschreiben
+  }
 
-  //Abbruch möglichkeit
 
   return 0;
 }
@@ -37,23 +40,44 @@ void printInfo(){
 
 struct ticket * runMenu(){
   struct ticket *ticket = NULL;
+  struct ticket *tickets = NULL;
+  struct ticket *end;
   char option;
+  int bool = 1;
 
-  printf("Do you want to buy a ticket(1), quit(2) or info(3)\n");
-  scanf("%c", &option);
+  printf("\nHello and welcome to your ticket machine\n");
 
-  if(option == '1'){
-    ticket = chooseTicket();
-  }else if(option == '2'){
-    printf("Quiting");
-  }else if(option == '3'){
-    printInfo();
-  }else{
-    printf("Illegal input\n");
+  while(bool){
+    printf("\nDo you want to buy a ticket(1), pay(2), info(3), quit(4)\n");
+    scanf("\n%c", &option);
+
+    if(option == '1'){
+      ticket = chooseTicket();
+      printf("You chose the %s\n", ticket->name);
+
+      if(tickets != NULL){
+        end->next = ticket;
+        end = ticket;
+      }else{
+        tickets = end = ticket;
+      }
+
+    }else if(option == '2'){
+      payTicket(tickets);
+      break;
+    }else if(option == '3'){
+      printInfo();
+    }else if(option == '4'){
+      break;
+    }
+    else{
+      printf("Illegal input\n");
+    }
   }
 
-  return ticket;
+  printf("Have a nice day\n\n");
 
+  return ticket;
 }
 
 struct ticket *ini24HTicket(){
@@ -61,6 +85,7 @@ struct ticket *ini24HTicket(){
   ptrTicket = (struct ticket *) malloc(sizeof(struct ticket));
   strcpy(ptrTicket->name, "24HTicket" );
   ptrTicket->price = 8.8;
+  ptrTicket->next = NULL;
 
   return ptrTicket;
 }
@@ -70,6 +95,7 @@ struct ticket *iniOneTimeTicket(){
   ptrTicket = (struct ticket *) malloc(sizeof(struct ticket));
   strcpy(ptrTicket->name, "OneTimeTicket");
   ptrTicket->price = 3.3;
+  ptrTicket->next = NULL;
 
   return ptrTicket;
 }
@@ -92,18 +118,24 @@ struct ticket *chooseTicket(){
 }
 
 void printTicket(struct ticket *ticket){
-  printf("....................\n");
-  printf("You bought the ticket: %s\n", ticket->name);
+  printf("\n....................\n");
+  printf("Ticket: %s\n", ticket->name);
   printf("For %.2f $\n", ticket->price);
-  printf("....................\n");
+  printf("....................\n\n");
 }
 
 int payTicket(struct ticket *ticket){
   int check = 0;
-  double price = ticket->price;
+  double price = 0;
   double cashInput = 0;
   double cashCurrInput;
   double change;
+  struct ticket *ptr = ticket;
+
+  while(ptr!=NULL){
+    price += ptr->price;
+    ptr = ptr->next;
+  }
 
   while(price > cashInput){
     printf("\n");
@@ -120,9 +152,29 @@ int payTicket(struct ticket *ticket){
   if(price < cashInput){
     check = 1;
     change = cashInput - price;
-    printTicket(ticket);
+    ptr = ticket;
+
+    while(ptr!=NULL){
+      printTicket(ptr);
+      ptr = ptr->next;
+    }
+
     printf("\nChange: %.2f\n", change);
   }
 
   return check;
+}
+
+struct ticket *append(struct ticket *currEnd, struct ticket *newTicket){ //returns new end
+  currEnd->next = newTicket;
+  return newTicket;
+}
+
+void printLinkedList(struct ticket *start){
+  struct ticket *ptr = start;
+
+  while(ptr != NULL){
+    printf("--Ticketname: %s\n", ptr->name);
+    ptr = ptr->next;
+  }
 }
