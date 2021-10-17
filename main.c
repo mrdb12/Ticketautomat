@@ -11,6 +11,7 @@ struct ticket *chooseTicket();
 int payTicket(struct ticket *ticket);
 struct ticket *append(struct ticket *currEnd, struct ticket *newTicket);//returns new end
 void printLinkedList(struct ticket *start);
+void appendTickets(char filename[30], struct ticket *start);
 
 
 
@@ -22,11 +23,12 @@ struct ticket{
 
 int main(void){
   int bool = 1;
+  struct ticket *tickets;
 
   while(bool){
     //Routenplaner
-    runMenu();
-    //Protokoll ausschreiben
+    tickets = runMenu();
+    appendTickets("log.txt", tickets);
   }
 
 
@@ -38,7 +40,7 @@ void printInfo(){
   printf("\nOneTimeTicket: 3.3$\n");
 }
 
-struct ticket * runMenu(){
+struct ticket * runMenu(){ //returns start of ticket list
   struct ticket *ticket = NULL;
   struct ticket *tickets = NULL;
   struct ticket *end;
@@ -63,21 +65,24 @@ struct ticket * runMenu(){
       }
 
     }else if(option == '2'){
-      payTicket(tickets);
-      break;
+      if(payTicket(tickets)){
+        break;
+      }
     }else if(option == '3'){
       printInfo();
     }else if(option == '4'){
+      tickets = NULL;
       break;
     }
     else{
+      tickets = NULL;
       printf("Illegal input\n");
     }
   }
 
   printf("Have a nice day\n\n");
 
-  return ticket;
+  return tickets;
 }
 
 struct ticket *ini24HTicket(){
@@ -146,6 +151,9 @@ int payTicket(struct ticket *ticket){
     if(cashCurrInput >= 0){
       cashInput += cashCurrInput;
     }else{
+      if(cashInput > 0){
+        printf("\nChange: %.2f\n", cashInput);
+      }
       break;
     }
   }
@@ -177,4 +185,17 @@ void printLinkedList(struct ticket *start){
     printf("--Ticketname: %s\n", ptr->name);
     ptr = ptr->next;
   }
+}
+
+void appendTickets(char filename[30], struct ticket *start){
+  FILE *ofile;
+  ofile = fopen(filename, "a");
+  struct ticket *ptr = start;
+
+  while(ptr!=NULL){
+    fprintf(ofile, "%s %.2f\n", ptr->name, ptr->price);
+    ptr = ptr->next;
+  }
+
+  fclose(ofile);
 }
