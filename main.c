@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 void printInfo();
 struct ticket * runMenu();
@@ -26,11 +27,10 @@ int main(void){
   struct ticket *tickets;
 
   while(bool){
-    //Routenplaner
+    //Datum
     tickets = runMenu();
     appendTickets("log.txt", tickets);
   }
-
 
   return 0;
 }
@@ -79,7 +79,6 @@ struct ticket * runMenu(){ //returns start of ticket list
       printf("Illegal input\n");
     }
   }
-
   printf("Have a nice day\n\n");
 
   return tickets;
@@ -166,7 +165,6 @@ int payTicket(struct ticket *ticket){
       printTicket(ptr);
       ptr = ptr->next;
     }
-
     printf("\nChange: %.2f\n", change);
   }
 
